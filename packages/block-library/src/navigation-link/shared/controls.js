@@ -267,7 +267,7 @@ export function BindingHelpText( { type, kind } ) {
  * @param {Object} props      - Component props
  * @param {string} props.type - The entity type
  * @param {string} props.kind - The entity kind
- * @return {JSX.Element} Error help text component
+ * @return {import('react').JSX.Element} Error help text component
  */
 export function MissingEntityHelpText( { type, kind } ) {
 	const entityType = getEntityTypeName( type, kind );
