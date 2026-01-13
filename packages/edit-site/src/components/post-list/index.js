@@ -164,6 +164,7 @@ export default function PostList( { postType } ) {
 		isResolving: isLoadingData,
 		totalItems,
 		totalPages,
+		hasResolved,
 	} = useEntityRecordsWithPermissions( 'postType', postType, queryArgs );
 
 	const postIds = useMemo(
@@ -294,7 +295,9 @@ export default function PostList( { postType } ) {
 				fields={ fields }
 				actions={ actions }
 				data={ data || EMPTY_ARRAY }
-				isLoading={ isLoadingData || isLoadingNotesCount }
+				isLoading={
+					isLoadingData || isLoadingNotesCount || ! hasResolved
+				}
 				view={ view }
 				onChangeView={ onChangeView }
 				selection={ selection }
