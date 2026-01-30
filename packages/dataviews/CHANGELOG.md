@@ -8,6 +8,7 @@
 - DataViews: Fix fields async validation. [#74948](https://github.com/WordPress/gutenberg/pull/74948)
 
 ### Enhancements
+- DataViews: Add `onReset` prop to control view reset functionality from the view config dropdown. [#75093](https://github.com/WordPress/gutenberg/pull/75093)
 - DataViews: Add details form layout validation. [#74996](https://github.com/WordPress/gutenberg/pull/74996)
 
 ## 11.3.0 (2026-01-29)
