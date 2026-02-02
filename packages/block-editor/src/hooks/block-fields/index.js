@@ -78,25 +78,25 @@ function BlockFields( {
 
 	const attributes = useSelect(
 		( select ) => {
-			let _attributes =
+			const _attributes =
 				select( blockEditorStore ).getBlockAttributes( clientId );
 			if ( ! _attributes?.metadata?.bindings ) {
 				return _attributes;
 			}
 
 			const { getBlockBindingsSource } = unlock( select( blocksStore ) );
-			Object.entries( _attributes.metadata.bindings ).forEach(
-				( [ attribute, binding ] ) => {
+			return Object.entries( _attributes.metadata.bindings ).reduce(
+				( acc, [ attribute, binding ] ) => {
 					const source = getBlockBindingsSource( binding.source );
 					const values = source.getValues( {
 						select,
 						context: blockContext,
 						bindings: { [ attribute ]: binding },
 					} );
-					_attributes = { ..._attributes, ...values };
-				}
+					return { ...acc, ...values };
+				},
+				_attributes
 			);
-			return _attributes;
 		},
 		[ blockContext, clientId ]
 	);
