@@ -40,7 +40,11 @@ import {
 import { unlock } from '../../lock-unlock';
 import CommentAuthorInfo from './comment-author-info';
 import CommentForm from './comment-form';
-import { focusCommentThread, getCommentExcerpt } from './utils';
+import {
+	focusCommentThread,
+	getCommentExcerpt,
+	getNoteIdsFromMetadata,
+} from './utils';
 import { useFloatingThread } from './hooks';
 import { AddComment } from './add-comment';
 import { store as editorStore } from '../../store';
@@ -70,22 +74,25 @@ export function Comments( {
 		useDispatch( blockEditorStore )
 	);
 
-	const { blockCommentId, selectedBlockClientId, orderedBlockIds } =
-		useSelect( ( select ) => {
+	const { blockNoteIds, selectedBlockClientId, orderedBlockIds } = useSelect(
+		( select ) => {
 			const {
 				getBlockAttributes,
 				getSelectedBlockClientId,
 				getClientIdsWithDescendants,
 			} = select( blockEditorStore );
 			const clientId = getSelectedBlockClientId();
+			const metadata = clientId
+				? getBlockAttributes( clientId )?.metadata
+				: null;
 			return {
-				blockCommentId: clientId
-					? getBlockAttributes( clientId )?.metadata?.noteId
-					: null,
+				blockNoteIds: getNoteIdsFromMetadata( metadata ),
 				selectedBlockClientId: clientId,
 				orderedBlockIds: getClientIdsWithDescendants(),
 			};
-		}, [] );
+		},
+		[]
+	);
 
 	const relatedBlockElement = useBlockElement( selectedBlockClientId );
 
@@ -106,15 +113,14 @@ export function Comments( {
 			};
 			// Insert the new comment block at the right order within the threads.
 			orderedBlockIds.forEach( ( blockId ) => {
+				// Get ALL threads for this block (not just the first one)
+				const threadsForBlock = t.filter(
+					( thread ) => thread.blockClientId === blockId
+				);
+				orderedThreads.push( ...threadsForBlock );
 				if ( blockId === selectedBlockClientId ) {
+					// For selected block, add new note thread after existing threads
 					orderedThreads.push( newNoteThread );
-				} else {
-					const threadForBlock = t.find(
-						( thread ) => thread.blockClientId === blockId
-					);
-					if ( threadForBlock ) {
-						orderedThreads.push( threadForBlock );
-					}
 				}
 			} );
 			return orderedThreads;
@@ -158,11 +164,25 @@ export function Comments( {
 
 	// Auto-select the related comment thread when a block is selected.
 	useEffect( () => {
-		// Fallback to 'new-note-thread' when showing the comment board for a new note.
-		setSelectedThread(
-			newNoteFormState === 'open' ? 'new-note-thread' : blockCommentId
-		);
-	}, [ blockCommentId, newNoteFormState ] );
+		if ( newNoteFormState === 'open' ) {
+			setSelectedThread( 'new-note-thread' );
+		} else if ( blockNoteIds.length > 0 ) {
+			// Find first unresolved thread for this block, or use first thread
+			const unresolvedThread = noteThreads.find(
+				( thread ) =>
+					blockNoteIds.includes( thread.id ) &&
+					thread.status === 'hold'
+			);
+			const firstThread = noteThreads.find( ( thread ) =>
+				blockNoteIds.includes( thread.id )
+			);
+			setSelectedThread(
+				unresolvedThread?.id ?? firstThread?.id ?? null
+			);
+		} else {
+			setSelectedThread( null );
+		}
+	}, [ blockNoteIds, newNoteFormState, noteThreads ] );
 
 	const setBlockRef = useCallback( ( id, blockRef ) => {
 		setBlockRefs( ( prev ) => ( { ...prev, [ id ]: blockRef } ) );
