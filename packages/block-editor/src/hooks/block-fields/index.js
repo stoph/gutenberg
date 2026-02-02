@@ -84,8 +84,13 @@ function BlockFields( {
 				return _attributes;
 			}
 
+			const {
+				metadata: { bindings, ...otherMetadata },
+				...otherAttributes
+			} = _attributes;
+
 			const { getBlockBindingsSource } = unlock( select( blocksStore ) );
-			return Object.entries( _attributes.metadata.bindings ).reduce(
+			return Object.entries( bindings ).reduce(
 				( acc, [ attribute, binding ] ) => {
 					const source = getBlockBindingsSource( binding.source );
 					const values = source.getValues( {
@@ -95,7 +100,7 @@ function BlockFields( {
 					} );
 					return { ...acc, ...values };
 				},
-				_attributes
+				{ ...otherAttributes, metadata: { ...otherMetadata } }
 			);
 		},
 		[ blockContext, clientId ]
