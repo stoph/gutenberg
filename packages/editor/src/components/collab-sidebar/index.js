@@ -141,11 +141,11 @@ function NotesSidebar( { postId } ) {
 		null;
 	const showAllNotesSidebar = resultComments.length > 0;
 
-	async function openTheSidebar() {
+	async function openTheSidebar( { addNewNote = false } = {} ) {
 		const prevArea = await getActiveComplementaryArea( 'core' );
 		const activeNotesArea = SIDEBARS.find( ( name ) => name === prevArea );
 
-		if ( currentThread?.status === 'approved' ) {
+		if ( currentThread?.status === 'approved' && ! addNewNote ) {
 			enableComplementaryArea( 'core', collabHistorySidebarName );
 		} else if ( ! activeNotesArea || ! showAllNotesSidebar ) {
 			enableComplementaryArea(
@@ -162,12 +162,14 @@ function NotesSidebar( { postId } ) {
 			return;
 		}
 
-		setNewNoteFormState( ! currentThread ? 'open' : 'closed' );
+		// When addNewNote is true, always open the new note form.
+		// Otherwise, only open if there's no existing thread.
+		const shouldOpenNewForm = addNewNote || ! currentThread;
+		setNewNoteFormState( shouldOpenNewForm ? 'open' : 'closed' );
 		focusCommentThread(
-			currentThread?.id,
+			shouldOpenNewForm ? undefined : currentThread?.id,
 			commentSidebarRef.current,
-			// Focus a comment thread when there's a selected block with a comment.
-			! currentThread ? 'textarea' : undefined
+			shouldOpenNewForm ? 'textarea' : undefined
 		);
 		toggleBlockSpotlight( clientId, true );
 	}
@@ -184,7 +186,9 @@ function NotesSidebar( { postId } ) {
 					onClick={ openTheSidebar }
 				/>
 			) }
-			<AddCommentMenuItem onClick={ openTheSidebar } />
+			<AddCommentMenuItem
+				onClick={ () => openTheSidebar( { addNewNote: true } ) }
+			/>
 			{ showAllNotesSidebar && (
 				<PluginSidebar
 					identifier={ collabHistorySidebarName }
