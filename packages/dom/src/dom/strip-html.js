@@ -11,6 +11,10 @@ import safeHTML from './safe-html';
  * @return {string} The text content with any html removed.
  */
 export default function stripHTML( html ) {
+	if ( typeof html !== 'string' ) {
+		return '';
+	}
+
 	// Remove any script tags or on* attributes otherwise their *contents* will be left
 	// in place following removal of HTML tags.
 	html = safeHTML( html );

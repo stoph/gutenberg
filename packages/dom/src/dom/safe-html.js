@@ -11,6 +11,10 @@ import remove from './remove';
  * @return {string} The sanitized HTML.
  */
 export default function safeHTML( html ) {
+	if ( typeof html !== 'string' ) {
+		return '';
+	}
+
 	const { body } = document.implementation.createHTMLDocument( '' );
 	body.innerHTML = html;
 	const elements = body.getElementsByTagName( '*' );
