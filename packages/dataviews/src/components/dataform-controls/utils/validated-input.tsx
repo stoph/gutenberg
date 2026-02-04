@@ -41,6 +41,7 @@ export default function ValidatedText< Item >( {
 }: DataFormValidatedTextControlProps< Item > ) {
 	const { label, placeholder, description, getValue, setValue, isValid } =
 		field;
+	const isBound = field.id in ( data?.metadata?.bindings || {} );
 	const value = getValue( { item: data } );
 
 	const onChangeControl = useCallback(
@@ -56,6 +57,7 @@ export default function ValidatedText< Item >( {
 
 	return (
 		<ValidatedInputControl
+			className={ isBound ? 'is-connected' : undefined }
 			required={ !! isValid.required }
 			customValidity={ getCustomValidity( isValid, validity ) }
 			label={ label }
