@@ -1,11 +1,10 @@
 /**
  * External dependencies
  */
+import type { ClassNamesArg } from '@emotion/react';
 import { __unsafe_useEmotionCache as useEmotionCache } from '@emotion/react';
 import type { SerializedStyles } from '@emotion/serialize';
 import { insertStyles } from '@emotion/utils';
-// eslint-disable-next-line no-restricted-imports
-import type { ClassNamesArg } from '@emotion/css';
 // eslint-disable-next-line no-restricted-imports
 import { cx as innerCx } from '@emotion/css';
 

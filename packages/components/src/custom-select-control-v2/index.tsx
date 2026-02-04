@@ -16,7 +16,11 @@ function CustomSelectControlV2(
 	const { defaultValue, onChange, value, ...restProps } = props;
 	// Forward props + store from v2 implementation
 	const store = Ariakit.useSelectStore( {
-		setValue: ( nextValue ) => onChange?.( nextValue ),
+		setValue: ( nextValue ) =>
+			onChange?.(
+				// @ts-expect-error nextValue is readonly
+				nextValue
+			),
 		defaultValue,
 		value,
 	} );

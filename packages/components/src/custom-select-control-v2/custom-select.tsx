@@ -80,7 +80,10 @@ const CustomSelectButton = ( {
 			hasCustomRenderProp={ !! renderSelectedValue }
 			store={ store }
 		>
-			{ computedRenderSelectedValue( currentValue ) }
+			{ computedRenderSelectedValue(
+				// @ts-expect-error currentValue is readonly
+				currentValue
+			) }
 		</Styled.Select>
 	);
 };
