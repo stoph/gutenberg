@@ -397,6 +397,13 @@ export default function NavigationLinkEdit( {
 					clientId={ clientId }
 				/>
 			</InspectorControls>
+			<InspectorControls>
+				<Controls
+					attributes={ attributes }
+					setAttributes={ setAttributes }
+					clientId={ clientId }
+				/>
+			</InspectorControls>
 			<div { ...blockProps }>
 				{ hasMissingEntity && (
 					<VisuallyHidden id={ missingEntityDescriptionId }>
