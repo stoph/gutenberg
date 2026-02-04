@@ -18,6 +18,10 @@
 - DataViews: Add details form layout validation. [#74996](https://github.com/WordPress/gutenberg/pull/74996)
 - DataViews: Consistent rendering of selection checkbox and actions in grid layout. [#75056](https://github.com/WordPress/gutenberg/pull/75056)
 
+### Code Quality
+
+- DataViews: Migrate styles from `@wordpress/base-styles` SCSS variables to `@wordpress/theme` CSS custom properties (design tokens). [#75204](https://github.com/WordPress/gutenberg/pull/75204)
+
 ## 11.3.0 (2026-01-29)
 
 ### Enhancements
