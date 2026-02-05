@@ -7,10 +7,11 @@
  * @package {{PREFIX}}
  */
 
-// Global storage for {{PAGE_SLUG}} routes and menu items
-global ${{PREFIX}}_{{PAGE_SLUG_UNDERSCORE}}_routes, ${{PREFIX}}_{{PAGE_SLUG_UNDERSCORE}}_menu_items;
+// Global storage for {{PAGE_SLUG}} routes, menu items, and app info
+global ${{PREFIX}}_{{PAGE_SLUG_UNDERSCORE}}_routes, ${{PREFIX}}_{{PAGE_SLUG_UNDERSCORE}}_menu_items, ${{PREFIX}}_{{PAGE_SLUG_UNDERSCORE}}_app_info;
 ${{PREFIX}}_{{PAGE_SLUG_UNDERSCORE}}_routes     = array();
 ${{PREFIX}}_{{PAGE_SLUG_UNDERSCORE}}_menu_items = array();
+${{PREFIX}}_{{PAGE_SLUG_UNDERSCORE}}_app_info   = null;
 
 if ( ! function_exists( '{{PREFIX}}_register_{{PAGE_SLUG_UNDERSCORE}}_route' ) ) {
 	/**
@@ -90,6 +91,43 @@ if ( ! function_exists( '{{PREFIX}}_get_{{PAGE_SLUG_UNDERSCORE}}_menu_items' ) )
 	}
 }
 
+if ( ! function_exists( '{{PREFIX}}_set_{{PAGE_SLUG_UNDERSCORE}}_app_info' ) ) {
+	/**
+	 * Set app branding info for the {{PAGE_SLUG}} page sidebar.
+	 *
+	 * @param string $name        App name displayed in the sidebar header.
+	 * @param string $description Optional. App description/tagline.
+	 * @param string $icon        Optional. Icon (dashicon string or data URL).
+	 */
+	function {{PREFIX}}_set_{{PAGE_SLUG_UNDERSCORE}}_app_info( $name, $description = '', $icon = '' ) {
+		global ${{PREFIX}}_{{PAGE_SLUG_UNDERSCORE}}_app_info;
+
+		$app_info = array( 'name' => $name );
+
+		if ( ! empty( $description ) ) {
+			$app_info['description'] = $description;
+		}
+
+		if ( ! empty( $icon ) ) {
+			$app_info['icon'] = $icon;
+		}
+
+		${{PREFIX}}_{{PAGE_SLUG_UNDERSCORE}}_app_info = $app_info;
+	}
+}
+
+if ( ! function_exists( '{{PREFIX}}_get_{{PAGE_SLUG_UNDERSCORE}}_app_info' ) ) {
+	/**
+	 * Get app branding info for the {{PAGE_SLUG}} page.
+	 *
+	 * @return array|null App info array or null if not set.
+	 */
+	function {{PREFIX}}_get_{{PAGE_SLUG_UNDERSCORE}}_app_info() {
+		global ${{PREFIX}}_{{PAGE_SLUG_UNDERSCORE}}_app_info;
+		return ${{PREFIX}}_{{PAGE_SLUG_UNDERSCORE}}_app_info;
+	}
+}
+
 if ( ! function_exists( '{{PREFIX}}_{{PAGE_SLUG_UNDERSCORE}}_preload_data' ) ) {
 	/**
 	 * Preload REST API data for the {{PAGE_SLUG}} page.
@@ -155,9 +193,10 @@ if ( ! function_exists( '{{PREFIX}}_{{PAGE_SLUG_UNDERSCORE}}_render_page' ) ) {
 		// Preload REST API data
 		{{PREFIX}}_{{PAGE_SLUG_UNDERSCORE}}_preload_data();
 
-		// Get all registered routes and menu items
+		// Get all registered routes, menu items, and app info
 		$menu_items = {{PREFIX}}_get_{{PAGE_SLUG_UNDERSCORE}}_menu_items();
 		$routes = {{PREFIX}}_get_{{PAGE_SLUG_UNDERSCORE}}_routes();
+		$app_info = {{PREFIX}}_get_{{PAGE_SLUG_UNDERSCORE}}_app_info();
 
 		// Get boot module asset file for dependencies
 		$asset_file = __DIR__ . '/../../modules/boot/index.min.asset.php';
@@ -171,15 +210,17 @@ if ( ! function_exists( '{{PREFIX}}_{{PAGE_SLUG_UNDERSCORE}}_render_page' ) ) {
 
 			// Add inline script to initialize the app
 			$init_modules = {{INIT_MODULES_JSON}};
+			$app_info_json = $app_info ? wp_json_encode( $app_info, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES ) : 'undefined';
 			wp_add_inline_script(
 				'{{PAGE_SLUG}}-prerequisites',
 				sprintf(
-					'import("@wordpress/boot").then(mod => mod.init({mountId: "%s", menuItems: %s, routes: %s, initModules: %s, dashboardLink: "%s"}));',
+					'import("@wordpress/boot").then(mod => mod.init({mountId: "%s", menuItems: %s, routes: %s, initModules: %s, dashboardLink: "%s", appInfo: %s}));',
 					'{{PAGE_SLUG}}-app',
 					wp_json_encode( $menu_items, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES ),
 					wp_json_encode( $routes, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES ),
 					wp_json_encode( $init_modules, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES ),
-					esc_url( admin_url( '/' ) )
+					esc_url( admin_url( '/' ) ),
+					$app_info_json
 				)
 			);
 

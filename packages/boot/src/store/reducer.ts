@@ -44,6 +44,12 @@ export function reducer( state: State = initialState, action: Action ): State {
 				...state,
 				dashboardLink: action.dashboardLink,
 			};
+
+		case 'SET_APP_INFO':
+			return {
+				...state,
+				appInfo: action.appInfo,
+			};
 	}
 
 	return state;

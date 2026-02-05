@@ -8,6 +8,40 @@
 	flex-direction: column;
 }
 
+.boot-sidebar__app-header {
+	padding: variables.$grid-unit-30 variables.$grid-unit-30 variables.$grid-unit-20;
+}
+
+.boot-sidebar__app-name-row {
+	display: flex;
+	align-items: center;
+	gap: variables.$grid-unit-15;
+}
+
+.boot-sidebar__app-icon {
+	flex-shrink: 0;
+	color: #fff;
+}
+
+.boot-sidebar__app-icon-img {
+	width: 24px;
+	height: 24px;
+	object-fit: contain;
+}
+
+.boot-sidebar__app-name {
+	font-size: 1.25rem;
+	font-weight: 500;
+	color: #fff;
+	line-height: 1.2;
+}
+
+.boot-sidebar__app-description {
+	font-size: 0.8125rem;
+	color: rgba(255, 255, 255, 0.65);
+	margin-top: variables.$grid-unit-05;
+}
+
 .boot-sidebar__content {
 	flex-grow: 1;
 	contain: content;

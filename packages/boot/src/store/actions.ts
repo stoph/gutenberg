@@ -1,7 +1,7 @@
 /**
  * Internal dependencies
  */
-import type { MenuItem, Route } from './types';
+import type { AppInfo, MenuItem, Route } from './types';
 
 export function registerMenuItem( id: string, menuItem: MenuItem ) {
 	return {
@@ -33,8 +33,16 @@ export function setDashboardLink( dashboardLink: string ) {
 	};
 }
 
+export function setAppInfo( appInfo: AppInfo ) {
+	return {
+		type: 'SET_APP_INFO' as const,
+		appInfo,
+	};
+}
+
 export type Action =
 	| ReturnType< typeof registerMenuItem >
 	| ReturnType< typeof updateMenuItem >
 	| ReturnType< typeof registerRoute >
-	| ReturnType< typeof setDashboardLink >;
+	| ReturnType< typeof setDashboardLink >
+	| ReturnType< typeof setAppInfo >;

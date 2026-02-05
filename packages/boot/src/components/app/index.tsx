@@ -10,7 +10,7 @@ import { dispatch, useSelect } from '@wordpress/data';
 import Router from './router';
 import RootSinglePage from '../root/single-page';
 import { store } from '../../store';
-import type { MenuItem, Route } from '../../store/types';
+import type { AppInfo, MenuItem, Route } from '../../store/types';
 
 function App( { rootComponent }: { rootComponent?: ComponentType } ) {
 	const routes = useSelect( ( select ) => select( store ).getRoutes(), [] );
@@ -24,12 +24,14 @@ export async function init( {
 	routes,
 	initModules,
 	dashboardLink,
+	appInfo,
 }: {
 	mountId: string;
 	menuItems?: MenuItem[];
 	routes?: Route[];
 	initModules?: string[];
 	dashboardLink?: string;
+	appInfo?: AppInfo;
 } ) {
 	( menuItems ?? [] ).forEach( ( menuItem ) => {
 		dispatch( store ).registerMenuItem( menuItem.id, menuItem );
@@ -41,6 +43,10 @@ export async function init( {
 
 	if ( dashboardLink ) {
 		dispatch( store ).setDashboardLink( dashboardLink );
+	}
+
+	if ( appInfo ) {
+		dispatch( store ).setAppInfo( appInfo );
 	}
 
 	for ( const moduleId of initModules ?? [] ) {

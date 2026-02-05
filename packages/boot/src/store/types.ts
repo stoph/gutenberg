@@ -12,6 +12,15 @@ import type { ReactNode, ComponentType } from 'react';
  */
 export type IconType = string | JSX.Element | ReactNode;
 
+/**
+ * App branding info displayed in the sidebar header.
+ */
+export interface AppInfo {
+	name: string;
+	description?: string;
+	icon?: IconType;
+}
+
 export interface MenuItem {
 	id: string;
 	label: string;
@@ -164,4 +173,5 @@ export interface State {
 	menuItems: Record< string, MenuItem >;
 	routes: Route[];
 	dashboardLink?: string;
+	appInfo?: AppInfo;
 }
