@@ -1,3 +1,4 @@
+/* eslint-disable react/no-deprecated */
 /**
  * External dependencies
  */
@@ -9,6 +10,7 @@ import {
 	hydrate,
 	unmountComponentAtNode,
 } from 'react-dom';
+/* eslint-enable react/no-deprecated */
 import { createRoot, hydrateRoot } from 'react-dom/client';
 
 /**
