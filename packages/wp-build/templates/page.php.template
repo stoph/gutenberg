@@ -42,10 +42,12 @@ if ( ! function_exists( '{{PREFIX}}_register_{{PAGE_SLUG_UNDERSCORE}}_menu_item'
 	 * @param string $id          Menu item ID.
 	 * @param string $label       Display label.
 	 * @param string $to          Route path to navigate to.
+	 * @param string $icon        Optional. Icon name from @wordpress/icons (e.g., 'home', 'settings', 'page').
 	 * @param string $parent_id   Optional. Parent menu item ID.
 	 * @param string $parent_type Optional. Parent type: 'drilldown' or 'dropdown'.
+	 * @param string $type        Optional. Item type: 'item', 'header', or 'separator'.
 	 */
-	function {{PREFIX}}_register_{{PAGE_SLUG_UNDERSCORE}}_menu_item( $id, $label, $to, $parent_id = '', $parent_type = '' ) {
+	function {{PREFIX}}_register_{{PAGE_SLUG_UNDERSCORE}}_menu_item( $id, $label, $to, $icon = '', $parent_id = '', $parent_type = '', $type = '' ) {
 		global ${{PREFIX}}_{{PAGE_SLUG_UNDERSCORE}}_menu_items;
 
 		$menu_item = array(
@@ -54,12 +56,20 @@ if ( ! function_exists( '{{PREFIX}}_register_{{PAGE_SLUG_UNDERSCORE}}_menu_item'
 			'to'    => $to,
 		);
 
+		if ( ! empty( $icon ) ) {
+			$menu_item['icon'] = $icon;
+		}
+
 		if ( ! empty( $parent_id ) ) {
 			$menu_item['parent'] = $parent_id;
 		}
 
 		if ( ! empty( $parent_type ) && in_array( $parent_type, array( 'drilldown', 'dropdown' ), true ) ) {
 			$menu_item['parent_type'] = $parent_type;
+		}
+
+		if ( ! empty( $type ) && in_array( $type, array( 'item', 'header', 'separator' ), true ) ) {
+			$menu_item['type'] = $type;
 		}
 
 		${{PREFIX}}_{{PAGE_SLUG_UNDERSCORE}}_menu_items[] = $menu_item;
