@@ -12,7 +12,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { __unstableStripHTML as stripHTML } from '@wordpress/dom';
 import {
 	privateApis as blockEditorPrivateApis,
-	useBlockEditingMode,
+	store as blockEditorStore,
 } from '@wordpress/block-editor';
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
@@ -132,7 +132,13 @@ export function Controls( { attributes, setAttributes, clientId } ) {
 		[ entityRecord?.featured_media ]
 	);
 
-	const isContentOnly = useBlockEditingMode() === 'contentOnly';
+	const blockEditingMode = useSelect(
+		( select ) =>
+			select( blockEditorStore ).getBlockEditingMode( clientId ),
+		[ clientId ]
+	);
+
+	const isContentOnly = blockEditingMode === 'contentOnly';
 
 	const preview = useLinkPreview( {
 		url,
